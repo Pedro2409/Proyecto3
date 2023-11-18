@@ -22,10 +22,10 @@ df['estu_tipodocumento'] = df['estu_tipodocumento'].map(tipo_documento_mapping)
 area_ubicacion_mapping = {'RURAL': 1, 'URBANO': 2}
 df['cole_area_ubicacion'] = df['cole_area_ubicacion'].map(area_ubicacion_mapping)
 
-bilingue_mapping = {'vacio': 0, 'S': 1, 'N': 2}
-calendario_mapping = {'A': 1, 'B': 2, 'vacio': 0}
-caracter_mapping = {'vacio': 0, 'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3,}
-jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5, 'vacio': 0}
+bilingue_mapping = {'N/A': 0, 'S': 1, 'N': 2}
+calendario_mapping = {'A': 1, 'B': 2, 'N/A': 0}
+caracter_mapping = {'N/A': 0, 'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3, 'N/A': 0}
+jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5, 'N/A': 0}
 
 df['cole_bilingue'] = df['cole_bilingue'].map(bilingue_mapping)
 df['cole_calendario'] = df['cole_calendario'].map(calendario_mapping)
@@ -67,10 +67,10 @@ municipio_mapping = {
 
 df['cole_mcpio_ubicacion'] = df['cole_mcpio_ubicacion'].map(municipio_mapping)
 
-naturaleza_mapping = {'OFICIAL': 1, 'NO OFICIAL': 2, 'vacio': 0}
-genero_mapping = {'M': 1, 'F': 2, 'vacio': 0}
+naturaleza_mapping = {'OFICIAL': 1, 'NO OFICIAL': 2, 'N/A': 0}
+genero_mapping = {'M': 1, 'F': 2, 'N/A': 0}
 educacion_mapping = {
-    'vacio': 0,
+    'N/A': 0,
     'Educación profesional completa': 1,
     'Secundaria (Bachillerato) completa': 2,
     'Primaria incompleta': 3,
@@ -88,12 +88,12 @@ df['estu_genero'] = df['estu_genero'].map(genero_mapping)
 df['fami_educacionmadre'] = df['fami_educacionmadre'].map(educacion_mapping)
 df['fami_educacionpadre'] = df['fami_educacionpadre'].map(educacion_mapping)
 
-estrato_mapping = {'vacio': 0, 'Estrato 1': 1, 'Sin Estrato': 7, 'Estrato 3': 3, 'Estrato 2': 2, 'Estrato 5': 5, 'Estrato 6': 6, 'Estrato 4': 4}
-personas_hogar_mapping = {'3 a 4': 1, '5 a 6': 2, '7 a 8': 3, '9 o más': 4, 'vacio': 0}
-tiene_automovil_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_computador_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_internet_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_lavadora_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
+estrato_mapping = {'N/A': 0, 'Estrato 1': 1, 'Sin Estrato': 2, 'Estrato 3': 3, 'Estrato 2': 4, 'Estrato 5': 5, 'Estrato 6': 6, 'Estrato 4': 7, 'N/A': 8}
+personas_hogar_mapping = {'3 a 4': 3, '5 a 6': 5, '7 a 8': 7, '9 o más': 9, 'N/A': 10}
+tiene_automovil_mapping = {'No': 0, 'Si': 1, 'N/A': 3, '': 3}
+tiene_computador_mapping = {'No': 0, 'Si': 1, 'N/A': 3, '': 3}
+tiene_internet_mapping = {'No': 0, 'Si': 1, 'N/A': 3, '': 3}
+tiene_lavadora_mapping = {'No': 0, 'Si': 1, 'N/A': 3, '': 3}
 
 df['fami_estratovivienda'] = df['fami_estratovivienda'].map(estrato_mapping)
 df['fami_personashogar'] = df['fami_personashogar'].map(personas_hogar_mapping)
@@ -126,3 +126,5 @@ labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
 
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
 df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
+
+df.to_excel('BD_cat.xlsx', index=True)
