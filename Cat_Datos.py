@@ -25,7 +25,7 @@ df['cole_area_ubicacion'] = df['cole_area_ubicacion'].map(area_ubicacion_mapping
 bilingue_mapping = {'vacio': 0, 'S': 1, 'N': 2}
 calendario_mapping = {'A': 1, 'B': 2, 'vacio': 0}
 caracter_mapping = {'vacio': 0, 'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3,}
-jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5, 'vacio': 0}
+jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5, 'vacio': 0, 'UNICA': 6}
 
 df['cole_bilingue'] = df['cole_bilingue'].map(bilingue_mapping)
 df['cole_calendario'] = df['cole_calendario'].map(calendario_mapping)
@@ -80,7 +80,8 @@ educacion_mapping = {
     'Técnica o tecnológica completa': 7,
     'No sabe': 8,
     'Postgrado': 9,
-    'Ninguno': 10
+    'Ninguno': 10,
+    'Educación profesional incompleta': 11
 }
 
 df['cole_naturaleza'] = df['cole_naturaleza'].map(naturaleza_mapping)
@@ -89,7 +90,7 @@ df['fami_educacionmadre'] = df['fami_educacionmadre'].map(educacion_mapping)
 df['fami_educacionpadre'] = df['fami_educacionpadre'].map(educacion_mapping)
 
 estrato_mapping = {'vacio': 0, 'Estrato 1': 1, 'Sin Estrato': 7, 'Estrato 3': 3, 'Estrato 2': 2, 'Estrato 5': 5, 'Estrato 6': 6, 'Estrato 4': 4}
-personas_hogar_mapping = {'3 a 4': 1, '5 a 6': 2, '7 a 8': 3, '9 o más': 4, 'vacio': 0}
+personas_hogar_mapping = {'1 a 2': 1,'3 a 4': 2, '5 a 6': 3, '7 a 8': 4, '9 o más': 5, 'vacio': 0}
 tiene_automovil_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
 tiene_computador_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
 tiene_internet_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
@@ -102,7 +103,7 @@ df['fami_tienecomputador'] = df['fami_tienecomputador'].map(tiene_computador_map
 df['fami_tieneinternet'] = df['fami_tieneinternet'].map(tiene_internet_mapping)
 df['fami_tienelavadora'] = df['fami_tienelavadora'].map(tiene_lavadora_mapping)
 
-lim_Notas = [0, 30, 50, 70, 100]
+lim_Notas = [-1, 30, 50, 70, 100]
 labels = ['Malo', 'Regular', 'Buena', 'Excelente']
 
 # Aplicar la categorización por rangos y reemplazar las etiquetas con valores numéricos
@@ -126,3 +127,11 @@ labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
 
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
 df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
+
+columnas=df.columns
+
+for i in columnas:
+    result=df[i].unique()
+    print(i,result)
+
+df.to_excel('BD_Mod_Fin.xlsx',index=True)
