@@ -128,10 +128,10 @@ labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
 df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
 
-columnas=df.columns
+#columnas=df.columns
 
-for i in columnas:
-    result=df[i].unique()
-    print(i,result)
+#for i in columnas:
+#    result=df[i].unique()
+#    print(i,result)
 
-df.to_excel('BD_Mod_Fin.xlsx',index=True)
+df.to_csv('BD_Mod_Fin.csv',index=True)
