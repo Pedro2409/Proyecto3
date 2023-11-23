@@ -11,8 +11,17 @@ from pgmpy.inference import VariableElimination
 from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 
-datos = 'Datos_sin_vacios.csv'
-df = pd.read_csv(datos)
+datos = 'Datos_sin_vacios_excel.xlsx'
+df = pd.read_excel(datos)
+
+columnas=df.columns
+print(columnas)
+
+
+for i in columnas:
+    result=df[i].unique()
+    print(i,result)
+
 
 # Definir el mapeo para estu_tipodocumento
 tipo_documento_mapping = {'TI': 1, 'CC': 2, 'CE': 3, 'CR': 4, 'PEP': 5, 'NES': 6, 'PE': 7, 'CCB': 8, 'PPT': 9, 'PC': 10}
@@ -24,7 +33,7 @@ df['cole_area_ubicacion'] = df['cole_area_ubicacion'].map(area_ubicacion_mapping
 
 bilingue_mapping = {'S': 1, 'N': 2}
 calendario_mapping = {'A': 1, 'B': 2}
-caracter_mapping = {'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3,}
+caracter_mapping = {'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3, 'NO APLICA':4}
 jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5,'UNICA': 6}
 
 df['cole_bilingue'] = df['cole_bilingue'].map(bilingue_mapping)
@@ -80,7 +89,8 @@ educacion_mapping = {
     'No sabe': 8,
     'Postgrado': 9,
     'Ninguno': 10,
-    'Educación profesional incompleta': 11
+    'Educación profesional incompleta': 11,
+    'No Aplica': 12
 }
 
 df['cole_naturaleza'] = df['cole_naturaleza'].map(naturaleza_mapping)
@@ -127,10 +137,13 @@ labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
 df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
 
+
 columnas=df.columns
+print(columnas)
 
 for i in columnas:
     result=df[i].unique()
     print(i,result)
 
-df.to_csv('BD_Mod_Fin.csv',index=True)
+df.to_csv('BD_Mod_Fin.csv',index=False)
+

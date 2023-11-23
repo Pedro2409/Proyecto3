@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-datos = 'Datos_Iniciales.xlsx'
+datos = 'BD_Mod_Fin.xlsx'
 
 # Dataframe
 df = pd.read_excel(datos)
@@ -29,3 +29,6 @@ plt.title("Mapa de calor de la matriz de correlación")
 
 # Muestra el mapa de calor
 plt.show()
+
+
+
