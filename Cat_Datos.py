@@ -11,8 +11,8 @@ from pgmpy.inference import VariableElimination
 from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 
-datos = 'Datos_P3.xlsx'
-df = pd.read_excel(datos)
+datos = 'Datos_sin_vacios.csv'
+df = pd.read_csv(datos)
 
 # Definir el mapeo para estu_tipodocumento
 tipo_documento_mapping = {'TI': 1, 'CC': 2, 'CE': 3, 'CR': 4, 'PEP': 5, 'NES': 6, 'PE': 7, 'CCB': 8, 'PPT': 9, 'PC': 10}
@@ -22,10 +22,10 @@ df['estu_tipodocumento'] = df['estu_tipodocumento'].map(tipo_documento_mapping)
 area_ubicacion_mapping = {'RURAL': 1, 'URBANO': 2}
 df['cole_area_ubicacion'] = df['cole_area_ubicacion'].map(area_ubicacion_mapping)
 
-bilingue_mapping = {'vacio': 0, 'S': 1, 'N': 2}
-calendario_mapping = {'A': 1, 'B': 2, 'vacio': 0}
-caracter_mapping = {'vacio': 0, 'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3,}
-jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5, 'vacio': 0, 'UNICA': 6}
+bilingue_mapping = {'S': 1, 'N': 2}
+calendario_mapping = {'A': 1, 'B': 2}
+caracter_mapping = {'TÉCNICO/ACADÉMICO': 1, 'TÉCNICO': 2, 'ACADÉMICO': 3,}
+jornada_mapping = {'TARDE': 1, 'MAÑANA': 2, 'NOCHE': 3, 'COMPLETA': 4, 'SABATINA': 5,'UNICA': 6}
 
 df['cole_bilingue'] = df['cole_bilingue'].map(bilingue_mapping)
 df['cole_calendario'] = df['cole_calendario'].map(calendario_mapping)
@@ -67,10 +67,9 @@ municipio_mapping = {
 
 df['cole_mcpio_ubicacion'] = df['cole_mcpio_ubicacion'].map(municipio_mapping)
 
-naturaleza_mapping = {'OFICIAL': 1, 'NO OFICIAL': 2, 'vacio': 0}
-genero_mapping = {'M': 1, 'F': 2, 'vacio': 0}
+naturaleza_mapping = {'OFICIAL': 1, 'NO OFICIAL': 2}
+genero_mapping = {'M': 1, 'F': 2}
 educacion_mapping = {
-    'vacio': 0,
     'Educación profesional completa': 1,
     'Secundaria (Bachillerato) completa': 2,
     'Primaria incompleta': 3,
@@ -89,12 +88,12 @@ df['estu_genero'] = df['estu_genero'].map(genero_mapping)
 df['fami_educacionmadre'] = df['fami_educacionmadre'].map(educacion_mapping)
 df['fami_educacionpadre'] = df['fami_educacionpadre'].map(educacion_mapping)
 
-estrato_mapping = {'vacio': 0, 'Estrato 1': 1, 'Sin Estrato': 7, 'Estrato 3': 3, 'Estrato 2': 2, 'Estrato 5': 5, 'Estrato 6': 6, 'Estrato 4': 4}
-personas_hogar_mapping = {'1 a 2': 1,'3 a 4': 2, '5 a 6': 3, '7 a 8': 4, '9 o más': 5, 'vacio': 0}
-tiene_automovil_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_computador_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_internet_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
-tiene_lavadora_mapping = {'No': 0, 'Si': 1, 'vacio': 3}
+estrato_mapping = {'Estrato 1': 1, 'Sin Estrato': 7, 'Estrato 3': 3, 'Estrato 2': 2, 'Estrato 5': 5, 'Estrato 6': 6, 'Estrato 4': 4}
+personas_hogar_mapping = {'1 a 2': 1,'3 a 4': 2, '5 a 6': 3, '7 a 8': 4, '9 o más': 5}
+tiene_automovil_mapping = {'No': 0, 'Si': 1}
+tiene_computador_mapping = {'No': 0, 'Si': 1,}
+tiene_internet_mapping = {'No': 0, 'Si': 1}
+tiene_lavadora_mapping = {'No': 0, 'Si': 1}
 
 df['fami_estratovivienda'] = df['fami_estratovivienda'].map(estrato_mapping)
 df['fami_personashogar'] = df['fami_personashogar'].map(personas_hogar_mapping)
@@ -128,10 +127,10 @@ labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
 df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
 
-#columnas=df.columns
+columnas=df.columns
 
-#for i in columnas:
-#    result=df[i].unique()
-#    print(i,result)
+for i in columnas:
+    result=df[i].unique()
+    print(i,result)
 
 df.to_csv('BD_Mod_Fin.csv',index=True)
