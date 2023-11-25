@@ -2,7 +2,7 @@ BEGIN;
 
 SET client_encoding = 'LATIN1';
 
-CREATE TABLE dataP3 (
+CREATE TABLE dataP3(
     id integer NOT NULL,
     periodo integer NOT NULL,
     estu_tipodocumento integer NOT NULL,
