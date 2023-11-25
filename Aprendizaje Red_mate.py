@@ -14,11 +14,11 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 
 
-datos = 'BD_ingles.csv'
+datos = 'BD_mate.csv'
 df = pd.read_csv(datos)
 
 #modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'punt_global'), ('fami_educacionpadre', 'punt_global'), ('fami_estratovivienda', 'punt_global'), ('fami_tienecomputador', 'punt_global'), ('fami_tieneinternet', 'punt_global')])
-modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'fami_educacionpadre'), ('fami_educacionmadre', 'fami_estratovivienda'), ('fami_educacionmadre', 'punt_global'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'fami_educacionmadre'), ('fami_tieneinternet', 'fami_educacionmadre'), ('fami_tieneinternet', 'fami_estratovivienda'), ('fami_tieneinternet', 'fami_educacionpadre'), ('fami_tieneinternet', 'punt_global'), ('punt_global', 'fami_estratovivienda')])
+modelo = BayesianNetwork([('periodo', 'fami_tieneinternet'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_mcpio_ubicacion', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'punt_matematicas'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'punt_matematicas'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'fami_tieneautomovil'), ('fami_tienecomputador', 'cole_naturaleza'), ('fami_tieneinternet', 'cole_mcpio_ubicacion')])
 sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=777)
 emv = MaximumLikelihoodEstimator(model = modelo, data = sample_train)
 
@@ -54,3 +54,18 @@ estimated_modelh = esth.estimate(
 print(estimated_modelh)
 print(estimated_modelh.nodes())
 print(estimated_modelh.edges())
+
+#Mismo procedimiento con BicScore
+from pgmpy.estimators import BicScore
+
+scoring_method = BicScore(data=df)
+esth = HillClimbSearch(data=df)
+estimated_modelBicScore = esth.estimate(
+    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e4)
+)
+print(estimated_modelBicScore)
+print(estimated_modelBicScore.nodes())
+print(estimated_modelBicScore.edges())
+
+print(scoring_method.score(estimated_modelBicScore))    
+print(scoring_method.score(estimated_modelh))
