@@ -17,11 +17,14 @@ df = pd.read_excel(datos)
 columnas=df.columns
 print(columnas)
 
-
 for i in columnas:
     result=df[i].unique()
     print(i,result)
 
+# Definir el mapeo para periodo
+df['periodo'] = df['periodo'].astype(str)
+periodo_mapping = {'20191': 2019, '20194': 2019, '20201': 2020, '20211': 2021, '20221': 2022, '20224': 2022}
+df['periodo'] = df['periodo'].map(periodo_mapping)
 
 # Definir el mapeo para estu_tipodocumento
 tipo_documento_mapping = {'TI': 1, 'CC': 2, 'CE': 3, 'CR': 4, 'PEP': 5, 'NES': 6, 'PE': 7, 'CCB': 8, 'PPT': 9, 'PC': 10}
