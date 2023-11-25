@@ -18,7 +18,8 @@ datos = 'BD_ingles.csv'
 df = pd.read_csv(datos)
 
 #modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'punt_global'), ('fami_educacionpadre', 'punt_global'), ('fami_estratovivienda', 'punt_global'), ('fami_tienecomputador', 'punt_global'), ('fami_tieneinternet', 'punt_global')])
-modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'fami_educacionpadre'), ('fami_educacionmadre', 'fami_estratovivienda'), ('fami_educacionmadre', 'punt_global'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'fami_educacionmadre'), ('fami_tieneinternet', 'fami_educacionmadre'), ('fami_tieneinternet', 'fami_estratovivienda'), ('fami_tieneinternet', 'fami_educacionpadre'), ('fami_tieneinternet', 'punt_global'), ('punt_global', 'fami_estratovivienda')])
+modelo = BayesianNetwork([('periodo', 'fami_tieneinternet'), ('cole_area_ubicacion', 'fami_tieneinternet'), ('cole_area_ubicacion', 'punt_ingles'), ('cole_area_ubicacion', 'fami_tienecomputador'), ('cole_area_ubicacion', 'periodo'), ('cole_area_ubicacion', 'fami_personashogar'), ('cole_calendario', 'periodo'), ('cole_calendario', 'fami_tieneautomovil'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_caracter', 'cole_area_ubicacion'), ('cole_caracter', 'punt_ingles'), ('cole_mcpio_ubicacion', 
+'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'punt_ingles'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_mcpio_ubicacion', 'fami_tieneautomovil'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_naturaleza', 'punt_ingles'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'fami_tienecomputador'), ('cole_naturaleza', 'fami_personashogar'), ('cole_naturaleza', 'cole_area_ubicacion'), ('cole_naturaleza', 'cole_calendario'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'periodo'), ('fami_tienecomputador', 'estu_tipodocumento'), ('fami_tienecomputador', 'fami_tieneautomovil'), ('fami_tieneinternet', 'fami_personashogar'), ('punt_ingles', 'estu_tipodocumento'), ('punt_ingles', 'periodo'), ('punt_ingles', 'fami_tienecomputador'), ('punt_ingles', 'fami_personashogar'), ('punt_ingles', 'cole_calendario')])
 sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=777)
 emv = MaximumLikelihoodEstimator(model = modelo, data = sample_train)
 
@@ -27,9 +28,9 @@ modelo.fit(data=sample_train, estimator=MaximumLikelihoodEstimator)
 infer = VariableElimination(modelo) 
 
 # Se extraen los valores reales
-y_real = sample_test["punt_global"].values
+y_real = sample_test["punt_ingles"].values
 
-df2 = sample_test.drop(columns=['punt_global'])
+df2 = sample_test.drop(columns=['punt_ingles'])
 y_p = modelo.predict(df2)
 
 accuracy = accuracy_score(y_real, y_p)
@@ -37,6 +38,7 @@ print(accuracy)
 
 
 conf = confusion_matrix(y_real, y_p)
+print(conf)
 
 
 
@@ -49,8 +51,23 @@ from pgmpy.estimators import K2Score
 scoring_method = K2Score(data=df)
 esth = HillClimbSearch(data=df)
 estimated_modelh = esth.estimate(
-    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e1)
+    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e4)
 )
 print(estimated_modelh)
 print(estimated_modelh.nodes())
 print(estimated_modelh.edges())
+
+#Mismo procedimiento con BicScore
+from pgmpy.estimators import BicScore
+
+scoring_method = BicScore(data=df)
+esth = HillClimbSearch(data=df)
+estimated_modelBicScore = esth.estimate(
+    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e4)
+)
+print(estimated_modelBicScore)
+print(estimated_modelBicScore.nodes())
+print(estimated_modelBicScore.edges())
+
+print(scoring_method.score(estimated_modelBicScore))    
+print(scoring_method.score(estimated_modelh))
