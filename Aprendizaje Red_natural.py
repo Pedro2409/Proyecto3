@@ -14,7 +14,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 
 
-datos = 'BD_ingles.csv'
+datos = 'BD_naturales.csv'
 df = pd.read_csv(datos)
 
 #modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'punt_global'), ('fami_educacionpadre', 'punt_global'), ('fami_estratovivienda', 'punt_global'), ('fami_tienecomputador', 'punt_global'), ('fami_tieneinternet', 'punt_global')])
