@@ -2,7 +2,8 @@ BEGIN;
 
 SET client_encoding = 'LATIN1';
 
-CREATE TABLE grado (
+CREATE TABLE datP3 (
+
     id integer NOT NULL,
     periodo integer NOT NULL,
     estu_tipodocumento integer NOT NULL,
@@ -27,10 +28,11 @@ CREATE TABLE grado (
     punt_sociales_ciudadanas integer NOT NULL,
     punt_c_naturales integer NOT NULL,
     punt_lectura_critica integer NOT NULL,
-    punt_global integer NOT NULL,	
+    punt_global integer NOT NULL	
 );
 
-COPY db_p3 (id,	periodo	estu_tipodocumento,	cole_area_ubicacion, cole_bilingue,	cole_calendario, cole_caracter,	cole_jornada, cole_mcpio_ubicacion,	cole_naturaleza, estu_genero, fami_educacionmadre, fami_educacionpadre,	fami_estratovivienda, fami_personashogar, fami_tieneautomovil, fami_tienecomputador, fami_tieneinternet, fami_tienelavadora, punt_ingles, punt_matematicas,	punt_sociales_ciudadanas, punt_c_naturales,	punt_lectura_critica, punt_global) FROM stdin;
+
+COPY datP3 (id, periodo, estu_tipodocumento, cole_area_ubicacion, cole_bilingue, cole_calendario, cole_caracter, cole_jornada, cole_mcpio_ubicacion, cole_naturaleza, estu_genero, fami_educacionmadre, fami_educacionpadre, fami_estratovivienda, fami_personashogar, fami_tieneautomovil, fami_tienecomputador, fami_tieneinternet, fami_tienelavadora, punt_ingles, punt_matematicas, punt_sociales_ciudadanas, punt_c_naturales, punt_lectura_critica, punt_global) FROM stdin;
 
 1	2022	1	2	1	1	1	2	2	1	1	1	1	1	3	0	1	1	1	2	2	2	2	2	3
 2	2022	1	1	2	1	1	1	4	1	2	3	2	1	2	0	0	1	1	2	2	1	2	1	2
@@ -47034,9 +47036,10 @@ COPY db_p3 (id,	periodo	estu_tipodocumento,	cole_area_ubicacion, cole_bilingue,	
 47000	2019	1	2	2	1	1	5	3	1	2	7	7	2	2	1	1	1	1	3	3	2	2	2	3
 \.
 
-ALTER TABLE ONLY db_p3
-    ADD CONSTRAINT db_p3_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY datP3
+    ADD CONSTRAINT datP3_pkey PRIMARY KEY (id);
 
 COMMIT;
 
-ANALYZE db_p3;
+ANALYZE datP3;
