@@ -3,7 +3,7 @@ BEGIN;
 SET client_encoding = 'LATIN1';
 
 CREATE TABLE dataP3(
-    id integer NOT NULL,
+    id text NOT NULL,
     periodo integer NOT NULL,
     estu_tipodocumento integer NOT NULL,
     cole_area_ubicacion integer NOT NULL,
@@ -31,8 +31,7 @@ CREATE TABLE dataP3(
 );
 
 
-COPY dataP3(id, periodo, estu_tipodocumento, cole_area_ubicacion, cole_bilingue, cole_calendario, cole_caracter, cole_jornada, cole_mcpio_ubicacion, cole_naturaleza, estu_genero, fami_educacionmadre, fami_educacionpadre, fami_estratovivienda, fami_personashogar, fami_tieneautomovil, fami_tienecomputador, fami_tieneinternet, fami_tienelavadora, punt_ingles, punt_matematicas, punt_sociales_ciudadanas, punt_c_naturales, punt_lectura_critica, punt_global)FROM stdin;
-
+COPY dataP3(id, periodo, estu_tipodocumento, cole_area_ubicacion, cole_bilingue, cole_calendario, cole_caracter, cole_jornada, cole_mcpio_ubicacion, cole_naturaleza, estu_genero, fami_educacionmadre, fami_educacionpadre, fami_estratovivienda, fami_personashogar, fami_tieneautomovil, fami_tienecomputador, fami_tieneinternet, fami_tienelavadora, punt_ingles, punt_matematicas, punt_sociales_ciudadanas, punt_c_naturales, punt_lectura_critica, punt_global) FROM stdin;
 0	2022	1	2	1	1	1	2	2	1	1	1	1	1	3	0	1	1	1	2	2	2	2	2	3
 1	2022	1	1	2	1	1	1	4	1	2	3	2	1	2	0	0	1	1	2	2	1	2	1	2
 2	2022	4	2	2	1	1	6	6	1	1	2	2	1	2	0	0	0	1	3	2	2	2	2	3
@@ -47035,11 +47034,9 @@ COPY dataP3(id, periodo, estu_tipodocumento, cole_area_ubicacion, cole_bilingue,
 46999	2019	1	2	2	1	1	5	3	1	2	7	7	2	2	1	1	1	1	3	3	2	2	2	3
 \.
 
-
 ALTER TABLE ONLY dataP3
     ADD CONSTRAINT dataP3_pkey PRIMARY KEY (id);
 
 COMMIT;
 
 ANALYZE dataP3;
-
