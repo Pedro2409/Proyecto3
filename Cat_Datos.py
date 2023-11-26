@@ -148,5 +148,5 @@ for i in columnas:
     result=df[i].unique()
     print(i,result)
 
-df.to_csv('BD_Mod_Fin.csv',index=False)
+df.to_csv('BD_Mod_Fin.csv',index=True)
 

@@ -16,3 +16,12 @@ WHERE schemaname='public';"""
 cursor.execute(query)
 result = cursor.fetchall()
 result
+
+query = """
+SELECT * 
+FROM dataP3
+LIMIT 10;"""
+cursor.execute(query)
+result = cursor.fetchall()
+result
+
