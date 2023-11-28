@@ -1,8 +1,11 @@
 import psycopg2
+
+psw='proyecto3'
+
 engine = psycopg2.connect(
 dbname="p3",
 user="postgres",
-password="proyecto3",
+password=psw,
 host="databasep3.cut51ddih3ok.us-east-1.rds.amazonaws.com",
 port='5432'
 )
