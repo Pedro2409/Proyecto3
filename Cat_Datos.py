@@ -26,6 +26,9 @@ df['periodo'] = df['periodo'].astype(str)
 periodo_mapping = {'20191': 2019, '20194': 2019, '20201': 2020, '20211': 2021, '20221': 2022, '20224': 2022}
 df['periodo'] = df['periodo'].map(periodo_mapping)
 
+df.to_csv('BD_Graficas.csv',index=False)
+
+
 # Definir el mapeo para estu_tipodocumento
 tipo_documento_mapping = {'TI': 1, 'CC': 2, 'CE': 3, 'CR': 4, 'PEP': 5, 'NES': 6, 'PE': 7, 'CCB': 8, 'PPT': 9, 'PC': 10}
 df['estu_tipodocumento'] = df['estu_tipodocumento'].map(tipo_documento_mapping)
@@ -115,31 +118,39 @@ df['fami_tienecomputador'] = df['fami_tienecomputador'].map(tiene_computador_map
 df['fami_tieneinternet'] = df['fami_tieneinternet'].map(tiene_internet_mapping)
 df['fami_tienelavadora'] = df['fami_tienelavadora'].map(tiene_lavadora_mapping)
 
-lim_Notas = [-1, 30, 50, 70, 100]
-labels = ['Malo', 'Regular', 'Buena', 'Excelente']
+lim_Notas_ingles= [-1, 36, 42, 51, 100]
+
+lim_Notas_matematicas = [-1, 38, 46, 54, 100]
+
+lim_Notas_sociales = [-1, 34, 41, 50, 100]
+
+lim_Notas_naturales = [-1, 38, 44, 51, 100]
+
+lim_Notas_lectura= [-1, 41, 48, 56, 100]
+
+labels = ['Q1','Q2','Q3','Q4']
 
 # Aplicar la categorización por rangos y reemplazar las etiquetas con valores numéricos
-df['punt_ingles'] = pd.cut(df['punt_ingles'], bins=lim_Notas, labels=labels)
-df['punt_ingles'] = df['punt_ingles'].replace({'Malo': 1, 'Regular': 2, 'Buena': 3, 'Excelente': 4})
+df['punt_ingles'] = pd.cut(df['punt_ingles'], bins=lim_Notas_ingles, labels=labels)
+df['punt_ingles'] = df['punt_ingles'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
-df['punt_matematicas'] = pd.cut(df['punt_matematicas'], bins=lim_Notas, labels=labels)
-df['punt_matematicas'] = df['punt_matematicas'].replace({'Malo': 1, 'Regular': 2, 'Buena': 3, 'Excelente': 4})
+df['punt_matematicas'] = pd.cut(df['punt_matematicas'], bins=lim_Notas_matematicas, labels=labels)
+df['punt_matematicas'] = df['punt_matematicas'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
-df['punt_sociales_ciudadanas'] = pd.cut(df['punt_sociales_ciudadanas'], bins=lim_Notas, labels=labels)
-df['punt_sociales_ciudadanas'] = df['punt_sociales_ciudadanas'].replace({'Malo': 1, 'Regular': 2, 'Buena': 3, 'Excelente': 4})
+df['punt_sociales_ciudadanas'] = pd.cut(df['punt_sociales_ciudadanas'], bins=lim_Notas_sociales, labels=labels)
+df['punt_sociales_ciudadanas'] = df['punt_sociales_ciudadanas'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
-df['punt_c_naturales'] = pd.cut(df['punt_c_naturales'], bins=lim_Notas, labels=labels)
-df['punt_c_naturales'] = df['punt_c_naturales'].replace({'Malo': 1, 'Regular': 2, 'Buena': 3, 'Excelente': 4})
+df['punt_c_naturales'] = pd.cut(df['punt_c_naturales'], bins=lim_Notas_naturales, labels=labels)
+df['punt_c_naturales'] = df['punt_c_naturales'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
-df['punt_lectura_critica'] = pd.cut(df['punt_lectura_critica'], bins=lim_Notas, labels=labels)
-df['punt_lectura_critica'] = df['punt_lectura_critica'].replace({'Malo': 1, 'Regular': 2, 'Buena': 3, 'Excelente': 4})
+df['punt_lectura_critica'] = pd.cut(df['punt_lectura_critica'], bins=lim_Notas_lectura, labels=labels)
+df['punt_lectura_critica'] = df['punt_lectura_critica'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
-lim_Punt = [0, 99, 199, 299, 399, 500]
-labelsPunt = ['Insuficiente', 'Malo', 'Regular', 'Suficiente', 'Sobresaliente']
+lim_Punt = [0, 192, 220, 258, 500]
+labelsPunt = ['Q1','Q2','Q3','Q4']
 
 df['punt_global'] = pd.cut(df['punt_global'], bins=lim_Punt, labels=labelsPunt)
-df['punt_global'] = df['punt_global'].replace({'Insuficiente': 1, 'Malo': 2, 'Regular': 3, 'Suficiente': 4, 'Sobresaliente':5})
-
+df['punt_global'] = df['punt_global'].replace({'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4})
 
 columnas=df.columns
 print(columnas)
@@ -148,5 +159,7 @@ for i in columnas:
     result=df[i].unique()
     print(i,result)
 
-df.to_csv('BD_Mod_Fin.csv',index=True)
+df.to_csv('BD_Quartiles.csv',index=False)
+
+df = pd.read_csv('BD_Quartiles.csv')
 

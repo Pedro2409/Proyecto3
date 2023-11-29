@@ -20,10 +20,28 @@ df = pd.read_csv(datos)
 #modelo = BayesianNetwork([('estu_genero', 'punt_global'), ('fami_educacionmadre', 'punt_global'), ('fami_educacionpadre', 'punt_global'), ('fami_estratovivienda', 'punt_global'), ('fami_tienecomputador', 'punt_global'), ('fami_tieneinternet', 'punt_global')])
 #modelo = BayesianNetwork([('periodo', 'cole_calendario'), ('cole_area_ubicacion', 'cole_caracter'), ('cole_area_ubicacion', 'cole_naturaleza'), ('cole_area_ubicacion', 'punt_ingles'), ('cole_area_ubicacion', 'fami_personashogar'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'cole_caracter'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_naturaleza', 'punt_ingles'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'fami_personashogar'), ('fami_tienecomputador', 'cole_naturaleza'), ('fami_tienecomputador', 'fami_tieneautomovil'), ('fami_tienecomputador', 'periodo'), ('fami_tienecomputador', 'punt_ingles'), ('fami_tienecomputador', 'estu_tipodocumento'), ('fami_tieneinternet', 'fami_tienecomputador'), ('fami_tieneinternet', 'cole_mcpio_ubicacion'), ('fami_tieneinternet', 'punt_ingles'), ('fami_tieneinternet', 'cole_area_ubicacion'), ('fami_tieneinternet', 'periodo'), ('fami_tieneinternet', 'cole_naturaleza'), ('fami_tieneinternet', 'fami_tieneautomovil'), ('fami_tieneinternet', 'fami_personashogar'), ('punt_ingles', 'estu_tipodocumento'), ('punt_ingles', 'periodo'), ('punt_ingles', 'cole_calendario'), ('punt_ingles', 'fami_tieneautomovil')])
 modelo = BayesianNetwork([('periodo', 'fami_tieneinternet'), ('cole_area_ubicacion', 'fami_tieneinternet'), ('cole_area_ubicacion', 'punt_ingles'), ('cole_area_ubicacion', 'fami_tienecomputador'), ('cole_area_ubicacion', 'periodo'), ('cole_area_ubicacion', 'fami_personashogar'), ('cole_calendario', 'periodo'), ('cole_calendario', 'fami_tieneautomovil'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_caracter', 'cole_area_ubicacion'), ('cole_caracter', 'punt_ingles'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'punt_ingles'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_mcpio_ubicacion', 'fami_tieneautomovil'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_naturaleza', 'punt_ingles'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'fami_tienecomputador'), ('cole_naturaleza', 'fami_personashogar'), ('cole_naturaleza', 'cole_area_ubicacion'), ('cole_naturaleza', 'cole_calendario'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'periodo'), ('fami_tienecomputador', 'estu_tipodocumento'), ('fami_tienecomputador', 'fami_tieneautomovil'), ('fami_tieneinternet', 'fami_personashogar'), ('punt_ingles', 'estu_tipodocumento'), ('punt_ingles', 'periodo'), ('punt_ingles', 'fami_tienecomputador'), ('punt_ingles', 'fami_personashogar'), ('punt_ingles', 'cole_calendario')])
-sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=777)
+print(modelo)
+
+# Obtén las variables sin predecesores
+variables_sin_predecesores = [node for node in modelo.nodes() if not modelo.get_parents(node)]
+
+# Imprime las variables sin predecesores
+print("Variables sin predecesores:", variables_sin_predecesores)
+
+sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=77)
+
 emv = MaximumLikelihoodEstimator(model = modelo, data = sample_train)
 
+cpdem_m = emv.estimate_cpd(node='cole_caracter')
+print(cpdem_m)
+
+cpdem_ing = emv.estimate_cpd(node="punt_ingles")
+print(cpdem_ing)
+
+
+
 modelo.fit(data=sample_train, estimator=MaximumLikelihoodEstimator)
+
 
 infer = VariableElimination(modelo) 
 
@@ -40,6 +58,48 @@ print(accuracy)
 conf = confusion_matrix(y_real, y_p)
 print(conf)
 
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
+from sklearn.metrics import classification_report
+
+target_columns = ["punt_ingles"]
+# Create an empty dictionary to store predictions for each column
+predictions = {}
+
+# Iterate over each target column
+for column in target_columns:
+    # Separate features (X) and target variable (y) for train and test sets
+    X_train = sample_train.drop(target_columns, axis=1)
+    y_train = sample_train[column]
+    X_test = sample_test.drop(target_columns, axis=1)
+    y_test = sample_test[column]
+    
+    # Make predictions for the current target column
+    y_pred = modelo.predict(X_test)
+    
+    # Store the predictions in the dictionary
+    predictions[column] = y_pred
+
+# Evaluate the overall performance
+# Assuming you have the true test values in 'true_values'
+overall_predictions = np.column_stack(list(predictions.values()))
+overall_true_values = sample_test[target_columns].values
+
+# Calculate classification report for each target column using overall_predictions
+for i, column in enumerate(target_columns):
+    y_true = sample_test[column]  # True labels for the current column
+    y_pred = overall_predictions[:, i]  # Predictions for the current column
+    
+    # Calculate confusion matrix
+    matriz = confusion_matrix(y_true, y_pred)
+    
+    # Print confusion matrix and classification report
+    print(f"Confusion matrix for '{column}':")
+    print(matriz)
+    
+    print(f"\nClassification report for '{column}':")
+    report = classification_report(y_true, y_pred)
+    print(report)
+    print("-------------------------------")
 
 
 
