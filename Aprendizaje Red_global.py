@@ -14,8 +14,26 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 
 
-datos = 'BD_mate.csv'
+datos = 'BD_Quartiles.csv'
 df = pd.read_csv(datos)
+
+df = df.drop('punt_ingles', axis=1)
+df = df.drop('punt_matematicas', axis=1)
+df = df.drop('punt_sociales_ciudadanas', axis=1)
+df = df.drop('punt_c_naturales', axis=1)
+df = df.drop('punt_lectura_critica', axis=1)
+df = df.drop('cole_bilingue', axis=1)
+df = df.drop('cole_calendario', axis=1)
+df = df.drop('cole_jornada', axis=1)
+df = df.drop('estu_genero', axis=1)
+df = df.drop('fami_educacionmadre', axis=1)
+df = df.drop('fami_educacionpadre', axis=1)
+df = df.drop('fami_estratovivienda', axis=1)
+df = df.drop('fami_tienelavadora', axis=1)
+
+
+columnas=df.columns
+print(columnas)
 
 #Puntaje
 
@@ -25,7 +43,7 @@ from pgmpy.estimators import K2Score
 scoring_method = K2Score(data=df)
 esth = HillClimbSearch(data=df)
 estimated_modelh = esth.estimate(
-    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e4)
+    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e1)
 )
 print(estimated_modelh)
 print(estimated_modelh.nodes())
@@ -48,7 +66,7 @@ print(scoring_method.score(estimated_modelh))
 
 
 #Se escoje el mejor modelo
-modelo = BayesianNetwork(('periodo', 'fami_tieneinternet'), ('periodo', 'cole_area_ubicacion'), ('periodo', 'cole_naturaleza'), ('periodo', 'fami_tienecomputador'), ('cole_area_ubicacion', 'punt_matematicas'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_mcpio_ubicacion', 'punt_matematicas'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'punt_matematicas'), ('cole_naturaleza', 'cole_area_ubicacion'), ('cole_naturaleza', 'fami_tieneinternet'), ('cole_naturaleza', 'cole_mcpio_ubicacion'), ('cole_naturaleza', 'fami_tienecomputador'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'fami_tieneautomovil'), ('fami_tienecomputador', 'punt_matematicas'), ('fami_tienecomputador', 'estu_tipodocumento'), ('fami_tieneinternet','cole_area_ubicacion'), ('fami_tieneinternet', 'fami_tieneautomovil'), ('punt_matematicas', 'estu_tipodocumento'), ('punt_matematicas', 'fami_tieneautomovil'))
+modelo = BayesianNetwork(('cole_area_ubicacion', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_naturaleza', 'fami_tieneautomovil'), ('fami_tienecomputador', 'fami_tieneinternet'), ('punt_global', 'cole_naturaleza'), ('punt_global', 'estu_tipodocumento'))
 print(modelo)
 
 # Obtén las variables sin predecesores
@@ -73,7 +91,7 @@ print(cpdem_ing)
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 
-target_columns = ["punt_matematicas"]
+target_columns = ["punt_global"]
 # Create an empty dictionary to store predictions for each column
 predictions = {}
 
