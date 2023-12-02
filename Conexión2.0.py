@@ -1,12 +1,12 @@
 import psycopg2
 
-psw='proyecto3'
+psw='navidadp3'
 
 engine = psycopg2.connect(
-dbname="p3",
+dbname="world",
 user="postgres",
 password=psw,
-host="databasep3.cut51ddih3ok.us-east-1.rds.amazonaws.com",
+host="p3.curxufagptbe.us-east-1.rds.amazonaws.com",
 port='5432'
 )
 
@@ -20,11 +20,4 @@ cursor.execute(query)
 result = cursor.fetchall()
 result
 
-query = """
-SELECT * 
-FROM dataP3
-LIMIT 10;"""
-cursor.execute(query)
-result = cursor.fetchall()
-result
 
