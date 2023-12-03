@@ -43,7 +43,7 @@ from pgmpy.estimators import K2Score
 scoring_method = K2Score(data=df)
 esth = HillClimbSearch(data=df)
 estimated_modelh = esth.estimate(
-    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e1)
+    scoring_method=scoring_method, max_indegree=4, max_iter=int(1e4)
 )
 print(estimated_modelh)
 print(estimated_modelh.nodes())
@@ -66,8 +66,14 @@ print(scoring_method.score(estimated_modelh))
 
 
 #Se escoje el mejor modelo
-modelo = BayesianNetwork(('cole_area_ubicacion', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_naturaleza', 'fami_tieneautomovil'), ('fami_tienecomputador', 'fami_tieneinternet'), ('punt_global', 'cole_naturaleza'), ('punt_global', 'estu_tipodocumento'))
+modelo = BayesianNetwork([('cole_area_ubicacion', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_naturaleza', 'fami_tieneautomovil'), ('fami_tienecomputador', 'fami_tieneinternet'), ('punt_global', 'cole_naturaleza'), ('punt_global', 'estu_tipodocumento')])
 print(modelo)
+
+modelo.nodes()
+list(modelo.nodes())
+datasel= ['cole_area_ubicacion', 'cole_mcpio_ubicacion', 'cole_caracter', 'cole_naturaleza', 'fami_tienecomputador', 'punt_global', 'fami_tieneinternet', 'fami_tieneautomovil', 'estu_tipodocumento']
+datasel = df[datasel]
+datasel
 
 # Obtén las variables sin predecesores
 variables_sin_predecesores = [node for node in modelo.nodes() if not modelo.get_parents(node)]
@@ -75,7 +81,7 @@ variables_sin_predecesores = [node for node in modelo.nodes() if not modelo.get_
 # Imprime las variables sin predecesores
 print("Variables sin predecesores:", variables_sin_predecesores)
 
-sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=77)
+sample_train, sample_test = train_test_split(datasel, test_size=0.2, random_state=77)
 
 emv = MaximumLikelihoodEstimator(model = modelo, data = sample_train)
 
@@ -138,9 +144,9 @@ modelo.fit(data=sample_train, estimator=MaximumLikelihoodEstimator)
 infer = VariableElimination(modelo) 
 
 # Se extraen los valores reales
-y_real = sample_test["punt_ingles"].values
+y_real = sample_test["punt_global"].values
 
-df2 = sample_test.drop(columns=['punt_ingles'])
+df2 = sample_test.drop(columns=['punt_global'])
 y_p = modelo.predict(df2)
 
 accuracy = accuracy_score(y_real, y_p)
