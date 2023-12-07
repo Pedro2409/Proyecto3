@@ -56,4 +56,4 @@ def update_bar_chart(selected_estrato):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True, port=890)
+    app.run_server(debug=True)
