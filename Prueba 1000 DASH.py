@@ -241,17 +241,17 @@ tab2_layout = html.Div([
 
         html.Div([
             html.Label('Periodo'),
-            dcc.Dropdown(id='Per', options=[{'label': '2019', 'value': 2019}, {'label': '2022', 'value': 2022}], placeholder='Selecciona el periodo cursado'),
+            dcc.Dropdown(id='Per', options=[{'label': '2019', 'value': 2019}, {'label': '2022', 'value': 2022}], placeholder='Selecciona el periodo cursado',  value=2019),
         ], className='four columns', style={'marginTop': '10px'}),
 
         html.Div([
             html.Label('Tipo de Documento'),
-            dcc.Dropdown(id = 'Doc', options =[{'label':'TI', 'value': 1}, {'label':'CC', 'value': 2}, {'label':'CE', 'value': 3} , {'label':'CR', 'value': 4}, {'label':'PEP', 'value':5}, {'label':'NES', 'value': 6}, {'label':'PE', 'value':7}, {'label':'CCB', 'value':8}, {'label':'PPT', 'value':9}, {'label':'PC', 'value':10}], placeholder='Selecciona tu tipo de documento'),
+            dcc.Dropdown(id = 'Doc', options =[{'label':'TI', 'value': 1}, {'label':'CC', 'value': 2}, {'label':'CE', 'value': 3} , {'label':'CR', 'value': 4}, {'label':'PEP', 'value':5}, {'label':'NES', 'value': 6}, {'label':'PE', 'value':7}, {'label':'CCB', 'value':8}, {'label':'PPT', 'value':9}, {'label':'PC', 'value':10}], placeholder='Selecciona tu tipo de documento', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
 
         html.Div([
             html.Label('Área de ubicación del colegio'),
-            dcc.Dropdown(id='U', options=[{'label': 'Rural', 'value': 1}, {'label': 'Urbano', 'value': 2}], placeholder='Selecciona el área'),
+            dcc.Dropdown(id='U', options=[{'label': 'Rural', 'value': 1}, {'label': 'Urbano', 'value': 2}], placeholder='Selecciona el área', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
     ], className='row'),
 
@@ -262,17 +262,17 @@ tab2_layout = html.Div([
     html.Div([
         html.Div([
             html.Label('¿En qué municipio que ubicado el colegio?'),
-            dcc.Dropdown(id='Mun', options=[{'label': 'SABANAS DE SAN ÁNGEL', 'value': 1}, {'label': 'ZAPAYÁN', 'value': 2 },{'label': 'SANTA MARTA', 'value': 3},{'label': 'PUEBLOVIEJO', 'value': 4},{'label': 'PEDRAZA', 'value': 5}, {'label': 'SAN SEBASTIÁN DE BUENAVISTA', 'value': 6},{'label': 'SANTA ANA', 'value': 7},{'label': 'PIVIJAY', 'value': 8},{'label': 'FUNDACIÓN', 'value': 9},{'label': 'ZONA BANANERA', 'value':10},{'label': 'EL RETÉN', 'value':11},{'label': 'PLATO', 'value':12},{'label': 'EL BANCO', 'value':13},{'label': 'SAN ZENÓN', 'value':14},{'label': 'GUAMAL', 'value':15},{'label': 'CHIVOLO', 'value':16}, {'label': 'ARIGUANÍ', 'value':17}, {'label': 'SALAMINA', 'value':18}, {'label': 'CIÉNAGA', 'value':19}, {'label': 'CERRO DE SAN ANTONIO', 'value':20}, {'label': 'SITIONUEVO', 'value':21}, {'label': 'ALGARROBO', 'value':22}, {'label': 'ARACATACA', 'value':23}, {'label': 'SANTA BÁRBARA DE PINTO', 'value':24}, {'label': 'REMOLINO', 'value':25}, {'label': 'NUEVA GRANADA', 'value':26}, {'label': 'PIJIÑO DEL CARMEN', 'value':27}, {'label': 'CONCORDIA', 'value':28}, {'label': 'TENERIFE', 'value':29}, {'label': 'EL PIÑÓN', 'value':30}], placeholder='Seleccione el municipio'),
+            dcc.Dropdown(id='Mun', options=[{'label': 'SABANAS DE SAN ÁNGEL', 'value': 1}, {'label': 'ZAPAYÁN', 'value': 2 },{'label': 'SANTA MARTA', 'value': 3},{'label': 'PUEBLOVIEJO', 'value': 4},{'label': 'PEDRAZA', 'value': 5}, {'label': 'SAN SEBASTIÁN DE BUENAVISTA', 'value': 6},{'label': 'SANTA ANA', 'value': 7},{'label': 'PIVIJAY', 'value': 8},{'label': 'FUNDACIÓN', 'value': 9},{'label': 'ZONA BANANERA', 'value':10},{'label': 'EL RETÉN', 'value':11},{'label': 'PLATO', 'value':12},{'label': 'EL BANCO', 'value':13},{'label': 'SAN ZENÓN', 'value':14},{'label': 'GUAMAL', 'value':15},{'label': 'CHIVOLO', 'value':16}, {'label': 'ARIGUANÍ', 'value':17}, {'label': 'SALAMINA', 'value':18}, {'label': 'CIÉNAGA', 'value':19}, {'label': 'CERRO DE SAN ANTONIO', 'value':20}, {'label': 'SITIONUEVO', 'value':21}, {'label': 'ALGARROBO', 'value':22}, {'label': 'ARACATACA', 'value':23}, {'label': 'SANTA BÁRBARA DE PINTO', 'value':24}, {'label': 'REMOLINO', 'value':25}, {'label': 'NUEVA GRANADA', 'value':26}, {'label': 'PIJIÑO DEL CARMEN', 'value':27}, {'label': 'CONCORDIA', 'value':28}, {'label': 'TENERIFE', 'value':29}, {'label': 'EL PIÑÓN', 'value':30}], placeholder='Seleccione el municipio',value=1),
         ], className='four columns', style={'marginTop': '10px'}),
         
         html.Div([
             html.Label('¿Qué tipo de educación brinda/brindaba su colegio?'),
-            dcc.Dropdown(id='Edu', options=[{'label':'TÉCNICO/ACADÉMICO', 'value':1},{'label':'TÉCNICO', 'value':2}, {'label':'ACADÉMICO', 'value':3}, {'label':'NO APLICA', 'value':4}], placeholder='Educación del colegio'),
+            dcc.Dropdown(id='Edu', options=[{'label':'TÉCNICO/ACADÉMICO', 'value':1},{'label':'TÉCNICO', 'value':2}, {'label':'ACADÉMICO', 'value':3}, {'label':'NO APLICA', 'value':4}], placeholder='Educación del colegio', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
 
          html.Div([
             html.Label('¿Qué naturaleza tiene su colegio?'),
-            dcc.Dropdown(id='Nat', options=[{'label':'OFICIAL', 'value':1},{'label':'NO OFICIAL', 'value':2}], placeholder='Naturaleza del colegio'),
+            dcc.Dropdown(id='Nat', options=[{'label':'OFICIAL', 'value':1},{'label':'NO OFICIAL', 'value':2}], placeholder='Naturaleza del colegio', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
 
     ], className='row'),
@@ -285,13 +285,13 @@ tab2_layout = html.Div([
         
         html.Div([
             html.Label('¿Cuantas personas habitan en su vivienda?'),
-            dcc.Dropdown(id = 'PersonasViv', options =[{'label':'1 a 2', 'value': 1}, {'label':'3 a 4', 'value': 2}, {'label':'5 a 6', 'value': 3} , {'label':'7 a 8', 'value': 4}, {'label':'9 o más', 'value':5}], placeholder='Habitantes Vivienda'),
+            dcc.Dropdown(id = 'PersonasViv', options =[{'label':'1 a 2', 'value': 1}, {'label':'3 a 4', 'value': 2}, {'label':'5 a 6', 'value': 3} , {'label':'7 a 8', 'value': 4}, {'label':'9 o más', 'value':5}], placeholder='Habitantes Vivienda', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
 
 
          html.Div([
             html.Label('¿En su vivienda cuentan con automóvil?'),
-            dcc.Dropdown(id = 'Auto', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='¿Auto?'),
+            dcc.Dropdown(id = 'Auto', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='¿Auto?', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
 
     ], className='row'),
@@ -301,12 +301,12 @@ tab2_layout = html.Div([
     html.Div([
         html.Div([
             html.Label('¿En su vivienda cuentan con computadora?'),
-            dcc.Dropdown(id = 'Compu', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='¿Compu?'),
+            dcc.Dropdown(id = 'Compu', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='¿Compu?', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
         
         html.Div([
             html.Label('¿En su vivienda cuentan con internet?'),
-            dcc.Dropdown(id = 'Internet', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='Internet?'),
+            dcc.Dropdown(id = 'Internet', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='Internet?', value=1),
         ], className='four columns', style={'marginTop': '10px'}),
     ], className='row'),
 
