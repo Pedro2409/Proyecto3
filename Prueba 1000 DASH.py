@@ -35,8 +35,8 @@ app = dash.Dash(__name__)
 # Diseño de la aplicación
 app.layout = html.Div([
     dcc.Tabs(id='tabs', value='tab1', children=[
-        dcc.Tab(label='Pestaña 1', value='tab1'),
-        dcc.Tab(label='Pestaña 2', value='tab2'),
+        dcc.Tab(label='Panorama', value='tab1'),
+        dcc.Tab(label='herramienta', value='tab2'),
     ]),
     html.Div(id='content')
 ], className='container')
@@ -114,6 +114,83 @@ def Grafica1():
 
     return dcc.Graph(figure=fig)
 
+def graf_2():
+    # Establecer la conexión a la base de datos
+    engine = psycopg2.connect(
+        dbname="world",
+        user="postgres",
+        password='navidadp3',
+        host="p3.curxufagptbe.us-east-1.rds.amazonaws.com",
+        port='5432'
+    )
+    
+    # Consulta SQL para contar la proporción de puntajes por año
+    query = """
+    SELECT
+        SUM(CASE WHEN fami_tieneinternet = 1 THEN 1 ELSE 0 END) AS con_internet,
+        SUM(CASE WHEN fami_tienecomputador = 1 THEN 1 ELSE 0 END) AS con_computador,
+        SUM(CASE WHEN fami_tieneinternet = 0 AND fami_tienecomputador = 0 THEN 1 ELSE 0 END) AS sin_internet_ni_computador
+    FROM bd_q;
+    """
+    
+    # Ejecutar la consulta y obtener el resultado como un DataFrame
+    df = pd.read_sql_query(query, engine)
+
+    # Calcular la proporción de cada categoría en relación con la cantidad total
+    total_estudiantes = df.sum().sum()
+    df_proporciones = df / total_estudiantes
+
+    # Convertir el DataFrame a un formato adecuado para la gráfica
+    df_proporciones = df_proporciones.transpose().reset_index()
+    df_proporciones.columns = ['Categoría', 'Porcentaje']
+
+    # Renombrar las categorías para personalizar la leyenda
+    df_proporciones['Categoría'] = df_proporciones['Categoría'].map({
+        'con_internet': 'Acceso a Internet',
+        'con_computador': 'Acceso a computador',
+        'sin_internet_ni_computador': 'No tiene acceso a ninguno'
+    })
+
+    # Definir colores personalizados
+    colores = {
+        'Acceso a Internet': 'lightgreen',  # Verde claro
+        'Acceso a computador': 'darkgreen',  # Verde oscuro
+        'No tiene acceso a ninguno': 'indianred'  # Rojo claro
+    }
+
+    # Crear la figura de la gráfica de barras horizontales con leyenda de colores
+    fig = px.bar(
+        df_proporciones,
+        x='Porcentaje',
+        y='Categoría',
+        orientation='h',
+        labels={'Porcentaje': 'Porcentaje', 'Categoría': 'Categoría'},
+        title='Porcentaje de estudiantes del Magdalena con acceso a computador, internet o a ningun servicio',
+        color='Categoría',  # Utilizar la columna 'Categoría' para el mapeo de colores
+        color_discrete_map=colores  # Asignar colores personalizados
+    )
+
+    # Personalizar el diseño de la gráfica
+    fig.update_xaxes(title_text='Porcentaje', showticklabels=False)
+    fig.update_yaxes(showgrid=False, showline=False, zeroline=False, title_text='', showticklabels=True)
+
+    # Agregar texto con los valores de porcentaje
+    for index, row in df_proporciones.iterrows():
+        fig.add_annotation(
+        x=row['Porcentaje'] + 0.02,  # Ajuste para la posición del texto
+        y=row['Categoría'],
+        text=f"<b>{row['Porcentaje']*100:.2f}%</b>",  # Texto en negrita
+        showarrow=False,
+        font=dict(size=10))
+
+    # Agregar leyenda de colores
+    fig.update_layout(coloraxis_showscale=False)  # Desactivar la leyenda de colores ya que utilizamos colores discretos
+
+    # Quitar el fondo gris
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+
+    return dcc.Graph(figure=fig)
+
 
 # Definir el contenido de las pestañas
 tab1_layout = html.Div([
@@ -131,7 +208,7 @@ tab1_layout = html.Div([
     html.Br(),
 
     html.Div([
-    html.H1('Aqui va otra gráfica')
+    graf_2()
     ]),
 
     html.Br(),
@@ -155,12 +232,18 @@ tab1_layout = html.Div([
 tab2_layout = html.Div([
     html.Div([
         html.H1('Herramienta de Predicción del Saber 11', style={'textAlign': 'center', 'color': 'white', 'backgroundColor': '#6C9B37', 'padding': '20px'}),
-        html.P('¡Estas a un paso de pasar a la universidad! Esta herramienta utiliza tus datos socioeconómicos y del colegio para predecir la probabilidad de quedar en un rango de calificación en las 5 materias evaluadas en el icfes. Te invitamos a responder las siguientes preguntas:', style={'textAlign': 'center', 'fontSize': '20px', 'fontWeight': 'bold', 'color': 'black'}),
+        html.P('¡Estas a un paso de pasar a la universidad! Esta herramienta utiliza tus datos socioeconómicos y del colegio para predecir la probabilidad de quedar en un rango alto de puntaje en el icfes. Te invitamos a responder las siguientes preguntas:', style={'textAlign': 'center', 'fontSize': '20px', 'fontWeight': 'bold', 'color': 'black'}),
     ], style={'backgroundColor': '#f2f2f2'}),
     
     html.Br(),
 
     html.Div([
+
+        html.Div([
+            html.Label('Periodo'),
+            dcc.Dropdown(id='Per', options=[{'label': '2019', 'value': 2019}, {'label': '2022', 'value': 2022}], placeholder='Selecciona el periodo cursado'),
+        ], className='four columns', style={'marginTop': '10px'}),
+
         html.Div([
             html.Label('Tipo de Documento'),
             dcc.Dropdown(id = 'Doc', options =[{'label':'TI', 'value': 1}, {'label':'CC', 'value': 2}, {'label':'CE', 'value': 3} , {'label':'CR', 'value': 4}, {'label':'PEP', 'value':5}, {'label':'NES', 'value': 6}, {'label':'PE', 'value':7}, {'label':'CCB', 'value':8}, {'label':'PPT', 'value':9}, {'label':'PC', 'value':10}], placeholder='Selecciona tu tipo de documento'),
@@ -199,6 +282,13 @@ tab2_layout = html.Div([
 
     
     html.Div([
+        
+        html.Div([
+            html.Label('¿Cuantas personas habitan en su vivienda?'),
+            dcc.Dropdown(id = 'PersonasViv', options =[{'label':'1 a 2', 'value': 1}, {'label':'3 a 4', 'value': 2}, {'label':'5 a 6', 'value': 3} , {'label':'7 a 8', 'value': 4}, {'label':'9 o más', 'value':5}], placeholder='Habitantes Vivienda'),
+        ], className='four columns', style={'marginTop': '10px'}),
+
+
          html.Div([
             html.Label('¿En su vivienda cuentan con automóvil?'),
             dcc.Dropdown(id = 'Auto', options =[{'label':'No', 'value': 0}, {'label':'Si', 'value': 1}], placeholder='¿Auto?'),
@@ -251,11 +341,13 @@ def update_content(selected_tab):
         return html.Div([])
 
 
-def pred_global(U, Car, N, Mun, Comp, Auto, Int, Doc):
+def pred_global(P, Doc, U, Mun, Car, N, Fam, Auto, Comp, Int):
     datos = 'BD_Cuartiles.csv'
     df = pd.read_csv(datos)
     
-    modelo = BayesianNetwork([('cole_area_ubicacion', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_naturaleza', 'fami_tieneautomovil'), ('fami_tienecomputador', 'fami_tieneinternet'), ('punt_global', 'cole_naturaleza'), ('punt_global', 'estu_tipodocumento')])
+    #modelo = BayesianNetwork([('cole_area_ubicacion', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_naturaleza', 'fami_tieneautomovil'), ('fami_tienecomputador', 'fami_tieneinternet'), ('punt_global', 'cole_naturaleza'), ('punt_global', 'estu_tipodocumento')])
+
+    modelo = BayesianNetwork([('periodo', 'fami_tieneinternet'), ('periodo', 'cole_area_ubicacion'), ('periodo', 'cole_caracter'), ('cole_area_ubicacion', 'fami_tieneinternet'), ('cole_area_ubicacion', 'punt_global'), ('cole_area_ubicacion', 'fami_personashogar'), ('cole_caracter', 'cole_mcpio_ubicacion'), ('cole_caracter', 'cole_naturaleza'), ('cole_caracter', 'cole_area_ubicacion'), ('cole_caracter', 'punt_global'), ('cole_caracter', 'fami_tieneautomovil'), ('cole_mcpio_ubicacion', 'fami_tienecomputador'), ('cole_mcpio_ubicacion', 'punt_global'), ('cole_mcpio_ubicacion', 'fami_tieneinternet'), ('cole_mcpio_ubicacion', 'cole_naturaleza'), ('cole_mcpio_ubicacion', 'fami_tieneautomovil'), ('cole_mcpio_ubicacion', 'cole_area_ubicacion'), ('cole_naturaleza', 'fami_tieneautomovil'), ('cole_naturaleza', 'fami_tienecomputador'), ('cole_naturaleza', 'fami_personashogar'), ('cole_naturaleza', 'punt_global'), ('cole_naturaleza', 'cole_area_ubicacion'), ('fami_tieneautomovil', 'fami_tienecomputador'), ('fami_tienecomputador', 'fami_tieneinternet'), ('fami_tienecomputador', 'estu_tipodocumento'), ('fami_tieneinternet', 'fami_personashogar'), ('punt_global', 'estu_tipodocumento'), ('punt_global', 'fami_tienecomputador'), ('punt_global', 'fami_personashogar')])
 
     sample_train, sample_test = train_test_split(df, test_size=0.2, random_state=777)
     emv = MaximumLikelihoodEstimator(model = modelo, data = sample_train)
@@ -263,11 +355,11 @@ def pred_global(U, Car, N, Mun, Comp, Auto, Int, Doc):
     modelo.fit(data=sample_train, estimator=MaximumLikelihoodEstimator)
 
     infer = VariableElimination(modelo)
-    resp = infer.query(['punt_global'], evidence={'cole_area_ubicacion': U, 'cole_caracter': Car, 'cole_naturaleza': N, 'cole_mcpio_ubicacion': Mun, 'fami_tienecomputador': Comp, 'fami_tieneautomovil':Auto, 'fami_tieneinternet': Int, 'estu_tipodocumento': Doc})
+    resp = infer.query(['punt_global'], evidence={'fami_personashogar':Fam, 'periodo':P, 'cole_area_ubicacion': U, 'cole_caracter': Car, 'cole_naturaleza': N, 'cole_mcpio_ubicacion': Mun, 'fami_tienecomputador': Comp, 'fami_tieneautomovil':Auto, 'fami_tieneinternet': Int, 'estu_tipodocumento': Doc})
 
     #respuesta = 'La probabilidad que obtengas un rango sobresaliente es de ' + str(round(resp.values[1], 4)*100) + '%'
 
-    prob_df = pd.DataFrame({'Resultado': ['Demás', 'Sobresaliente'],'Probabilidad': [resp.values[0], resp.values[1]]})
+    prob_df = resp.values[1]
     
     respuesta = prob_df
 
@@ -278,24 +370,26 @@ def pred_global(U, Car, N, Mun, Comp, Auto, Int, Doc):
     Output('output', 'children'),
     Output('probability-plot', 'figure'),
     [Input('submit', 'n_clicks')],
-    [State('Doc', 'value'),
+    [State('Per', 'value'),
+    State('Doc', 'value'),
     State('U', 'value'),
     State('Mun', 'value'),
     State('Edu', 'value'),
     State('Nat', 'value'),
+    State('PersonasViv', 'value'),
     State('Auto', 'value'),
     State('Compu', 'value'),
     State('Internet', 'value')]
 )
 
 
-def update_output(n_clicks, U, Car, N, Mun, Comp, Auto, Int, Doc):
+def update_output(n_clicks, P, Doc, U, Mun, Car, N, Fam, Auto, Comp, Int):
     try:
         if n_clicks >= 0:
-            probabilidad = pred_global(U, Car, N, Mun, Comp, Auto, Int, Doc)
+            probabilidad = pred_global(P, Doc, U, Mun, Car, N, Fam, Auto, Comp, Int)
             
             # Convertir las probabilidades a porcentajes
-            prob_sobresaliente = round(probabilidad.iloc[1]['Probabilidad'] * 100, 2)
+            prob_sobresaliente = round(probabilidad * 100, 2)
             prob_otros = 100 - prob_sobresaliente  # La probabilidad de "Otros" es el complemento de Sobresaliente
             
             # Crea un gráfico de donut para visualizar la probabilidad
