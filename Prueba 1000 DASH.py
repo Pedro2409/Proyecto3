@@ -36,7 +36,7 @@ app = dash.Dash(__name__)
 app.layout = html.Div([
     dcc.Tabs(id='tabs', value='tab1', children=[
         dcc.Tab(label='Panorama', value='tab1'),
-        dcc.Tab(label='herramienta', value='tab2'),
+        dcc.Tab(label='Herramienta', value='tab2'),
     ]),
     html.Div(id='content')
 ], className='container')
@@ -192,6 +192,42 @@ def graf_2():
     return dcc.Graph(figure=fig)
 
 
+@app.callback(
+    Output('bar-chart', 'figure'),
+    [Input('estrato-dropdown', 'value')]
+)
+def update_bar_chart(selected_estrato):
+    import dash
+    from dash import dcc, html
+    from dash.dependencies import Input, Output
+    import pandas as pd
+    import plotly.express as px
+    df = pd.read_csv("BD_Cuartiles.csv")
+
+    # Convert 'fami_estratovivienda' to integers
+    df['fami_estratovivienda'] = pd.to_numeric(df['fami_estratovivienda'], errors='coerce')
+
+    filtered_data = df[df['fami_estratovivienda'] == selected_estrato]
+    
+    # Map punt_global values to categories
+    punt_global_mapping = {1: 'Cuartil 1', 2: 'Cuartil 2', 3: 'Cuartil 3', 4: 'Cuartil 4'}
+    filtered_data['punt_global'] = filtered_data['punt_global'].map(punt_global_mapping)
+    
+    # Define custom colors for each category
+    colors = ['#003400', '#006414', '#009929', '#5ccb5f']
+    
+    # Create bar chart with custom colors
+    fig = px.histogram(filtered_data, x='punt_global', title=f'Distribución para el Estrato {selected_estrato}',
+                       labels={'punt_global': 'Puntaje Global'},
+                       category_orders={'punt_global': ['Cuartil 1', 'Cuartil 2', 'Cuartil 3', 'Cuartil 4']},
+                       color='punt_global', color_discrete_map={category: color for category, color in zip(['Cuartil 1', 'Cuartil 2', 'Cuartil 3', 'Cuartil 4'], colors)})
+    
+    fig.update_xaxes(title_text='Puntaje Global')  # Add x-axis title
+    
+    return fig
+
+
+
 # Definir el contenido de las pestañas
 tab1_layout = html.Div([
     html.Div([
@@ -214,7 +250,16 @@ tab1_layout = html.Div([
     html.Br(),
     
     html.Div([
-        html.H1('Aqui va otra gráfica')
+        dcc.Dropdown(
+        id='estrato-dropdown',
+        options=[
+            {'label': f'{i} - Estrato {i}', 'value': i} for i in range(1, 8)
+        ],
+        value=1,  # Default value
+        style={'width': '50%'}),
+    
+        dcc.Graph(id='bar-chart'),
+
         ]),
 
     html.Br(),
